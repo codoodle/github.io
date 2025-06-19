@@ -1,5 +1,5 @@
-import { Blog, Category, Tag } from "@/contents";
 import { PAGE_SIZE, paginate } from "@/lib/pagination";
+import { Blog, Category, Tag } from "@/types";
 import PostListItem from "./post-list-item";
 import PostListMore from "./post-list-more";
 
@@ -72,7 +72,6 @@ export default function PostList({
       })),
     }),
   );
-  console.log(pageItems);
 
   return (
     <div>

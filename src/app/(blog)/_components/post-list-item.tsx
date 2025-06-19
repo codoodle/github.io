@@ -1,4 +1,4 @@
-import { PostSimple } from "@/contents";
+import { PostSimple } from "@/types";
 import Link from "next/link";
 import PostMeta from "./post-meta";
 

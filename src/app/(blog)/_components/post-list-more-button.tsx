@@ -1,6 +1,6 @@
 "use client";
 
-import { PostSimple } from "@/contents";
+import { PostSimple } from "@/types";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 

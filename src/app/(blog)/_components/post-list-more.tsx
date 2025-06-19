@@ -1,6 +1,6 @@
 "use client";
 
-import { PostSimple } from "@/contents";
+import { PostSimple } from "@/types";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import { create } from "zustand";

@@ -2,62 +2,12 @@ import { readFile } from "node:fs/promises";
 import { basename, dirname, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { Blog, Category, Post, Tag } from "@/types";
 import { evaluate } from "@mdx-js/mdx";
 import { compareDesc } from "date-fns";
 import { globby } from "globby";
 import matter from "gray-matter";
-import { MDXContent } from "mdx/types";
 import * as runtime from "react/jsx-runtime";
-
-export type Blog = {
-  name: string;
-  description: string;
-  categories: Category[];
-  posts: Post[];
-  tags: Tag[];
-  ContentComponent?: MDXContent;
-};
-
-export type Category = {
-  name: string;
-  description: string;
-  slug: string;
-  categories?: Category[];
-  posts?: Post[];
-  ContentComponent?: MDXContent;
-};
-
-export type Tag = {
-  name: string;
-  slug: string;
-  posts: Post[];
-};
-
-export type Post = {
-  title: string;
-  description: string;
-  datePublished: string;
-  dateModified: string;
-  author: string;
-  slug: string;
-  tags?: Pick<Tag, "name" | "slug">[];
-  categories?: Category[];
-  categorySlug?: string;
-  ContentComponent?: MDXContent;
-};
-
-export type PostSimple = {
-  title: string;
-  description: string;
-  datePublished: string;
-  dateModified: string;
-  slug: string;
-  categories?: {
-    name: string;
-    description: string;
-    slug: string;
-  }[];
-};
 
 type BlogContent = {
   path: string;
@@ -105,7 +55,9 @@ async function loadContents() {
     cwd: __dirname,
     absolute: true,
   });
-
+  const evaluateOptions = {
+    ...runtime,
+  };
   const contents = await Promise.all(
     paths.map(async (path): Promise<Content> => {
       const contentFileRelativePath = relative(__dirname, path);
@@ -124,7 +76,8 @@ async function loadContents() {
             blog: {
               name: meta.name,
               description: meta.description,
-              ContentComponent: (await evaluate(content, runtime)).default,
+              ContentComponent: (await evaluate(content, evaluateOptions))
+                .default,
             },
           };
         }
@@ -136,7 +89,8 @@ async function loadContents() {
             name: meta.name,
             description: meta.description,
             slug: trimSlugSuffix(contentFileRelativePath, 1),
-            ContentComponent: (await evaluate(content, runtime)).default,
+            ContentComponent: (await evaluate(content, evaluateOptions))
+              .default,
           },
         };
       } else {
@@ -157,11 +111,8 @@ async function loadContents() {
             ]),
             categorySlug:
               trimSlugSuffix(contentFileRelativePath, 1) || undefined,
-            ContentComponent: (
-              await evaluate(content, {
-                ...runtime,
-              })
-            ).default,
+            ContentComponent: (await evaluate(content, evaluateOptions))
+              .default,
           },
         };
       }

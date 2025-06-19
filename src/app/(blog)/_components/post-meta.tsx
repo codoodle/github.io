@@ -1,4 +1,4 @@
-import { PostSimple } from "@/contents";
+import { PostSimple } from "@/types";
 import { format } from "date-fns";
 import Link from "next/link";
 

@@ -1,4 +1,4 @@
-import { Post } from "@/contents";
+import { Post } from "@/types";
 import PostMeta from "./post-meta";
 
 type PostDetailProps = {
