@@ -46,6 +46,19 @@ export type Post = {
   ContentComponent?: MDXContent;
 };
 
+export type PostSimple = {
+  title: string;
+  description: string;
+  datePublished: string;
+  dateModified: string;
+  slug: string;
+  categories?: {
+    name: string;
+    description: string;
+    slug: string;
+  }[];
+};
+
 type BlogContent = {
   path: string;
   relativePath: string;
@@ -251,6 +264,15 @@ export function toSlugArray(slug: string) {
 export function resolveContentBySlug(slug?: string | string[]) {
   if (slug && slug.length > 0) {
     const s = Array.isArray(slug) ? concatSlug(slug) : slug;
+    const isTags = s.startsWith("tags/");
+    if (isTags) {
+      const tag = blog.tags.find((f) => `tags/${f.slug}` === s);
+      if (tag) {
+        return {
+          tag,
+        };
+      }
+    }
     const category = blog.categories.find((f) => f.slug === s);
     if (category) {
       return {
